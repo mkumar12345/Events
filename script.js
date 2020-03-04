@@ -12,7 +12,7 @@ req.onload = function (e) {
   var sheet_name_list = workbook.SheetNames;
   var json_sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
   for (let i = 0; i < json_sheet.length; i++) {
-    var card = document.createElement("div");
+    var card = document.createElement("a");
     card.classList.add("card");
 
     // top div
@@ -48,20 +48,27 @@ req.onload = function (e) {
     title.classList.add("title");
     card_footer.appendChild(title)
     card.appendChild(card_footer)
-    document.getElementById("cards").appendChild(card); //apend to cards flexbox
+
 
 s = json_sheet[i];
+
 // getting date in correct format
 var date = new Date(s.Date);
 var js_date = ExcelDateToJSDate(date);
 var final_date = formatDate(js_date); 
-console.log(s)
 // assigning values to dom
+console.log(s)
+card.style.backgroundColor=s.Color
 company.src = s["Company Image"]
 price.src=s['Price Image'];
 illustration.src = s.Illustration;
 time.innerHTML = final_date + s.Time;
 title.innerHTML = s.Title;
+
+card.href=s.Link;
+card.target="_blank"
+document.getElementById("cards").appendChild(card); //apend to cards flexbox
+
   }
 }
 
