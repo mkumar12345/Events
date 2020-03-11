@@ -1,0 +1,85 @@
+.filters {
+  padding: 15px;
+  background-color: rgb(43, 42, 42);
+  color: white;
+}
+#drop_downs {
+    text-align: center;
+}
+.drop_down {
+    text-align: left;
+  border: 1px solid rgba(252, 251, 251, 0.199);
+  display: inline-block;
+  vertical-align: top;
+  margin: 5px;
+  cursor: pointer;
+  background-color: rgb(70, 68, 68);
+  width: 180px;
+  transition: all 0.2s;
+  position: relative;
+}
+.drop_down .option{
+  padding: 10px;
+
+}
+.drop_down:hover {
+  background-color: rgb(49, 49, 49);
+}
+.drop_down:hover .values {
+  display: block;
+  max-height: 600px;
+  visibility: visible;
+
+}
+.drop_down .values {
+z-index: 1;
+background-color: rgb(255, 255, 255);
+  max-height: 0;
+  transition: all 0.3s;
+  position: absolute;
+  overflow: hidden;
+  right: 0;
+  left: 0;
+  top:100%;
+  color:Black;
+  border:1px solid rgba(0, 0, 0, 0.24);
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.values .value {
+  padding: 10px;
+  min-height: 20px;
+  transition: all .2s;
+  border-bottom:1px solid rgba(0, 0, 0, 0.062);
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.values .value div{
+  font-size:13px;
+  color:rgb(133, 132, 132);
+  pointer-events: none;
+}
+.values .value:hover{
+    background-color: rgba(128, 128, 128, 0.185);
+}
+
+.drop_down .selected{
+    background-color: rgb(70, 68, 68);
+  border-bottom:1px solid rgba(255, 251, 251, 0.26);
+  padding: 10px;
+  transition:all .2s;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.drop_down .selected div{
+  font-size:13px;
+  color:rgb(25, 209, 25);
+  pointer-events: none;
+}
+.drop_down .selected:hover{
+  background-color: rgb(49, 49, 49);
+
+}
