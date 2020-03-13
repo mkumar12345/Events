@@ -1,76 +1,147 @@
-@import url('https://fonts.googleapis.com/css?family=Hind+Madurai:300,600&display=swap');
-*{font-family: 'Hind Madurai', sans-serif;}
-body{
-    min-width: 390px;
+@import url("https://fonts.googleapis.com/css?family=Hind+Madurai:300,600&display=swap");
+* {
+  font-family: "Hind Madurai", sans-serif;
 }
-main{
-    max-width:1400px;
-    background-color: whitesmoke;
-    margin:auto;
+body {
+  min-width: 390px;
 }
-#cards{
-    display:flex;
-    justify-content: center;
-    flex-wrap: wrap;
+main {
+  max-width: 1400px;
+  background-color: whitesmoke;
+  margin: auto;
 }
-.card{
-    margin:20px;
-}
-   #cards .card {
-       width: 350px;
-       padding: 10px;
-       border-radius: 5px;
-       border: 1px solid rgba(192, 192, 192, 0.445);
-       box-shadow: 0 0 15px rgba(0, 0, 0, 0.096);
-       cursor: pointer;
-       transition: all .3s;
-       position: relative;
-   }
 
-   #cards .card:hover {
-       box-shadow: 0 20px 15px rgba(0, 0, 0, 0.24);
-       transform: translateY(-5px);
-    
-   }
-
-   .card .img {
-       text-align: center;
-       padding: 50px 0;
-       width: 250px;
-       margin: auto;
-   }
-.top{
-    display:flex;
-    justify-content: space-between;
+#cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
-   .top img {
-       height:100%;
-       height: 30px;
-       margin:auto 0;
-   }
-   .img img {
-       width: 100%;
-   }
+.card {
+  margin: 20px;
+}
+#cards .card {
+  width: 350px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(192, 192, 192, 0.445);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.096);
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
 
-   .time {
-       text-align: center;
-       font-weight: bold;
-       background-color: rgb(54, 54, 54);
-       font-family: sans-serif;
-       color:rgb(206, 206, 206);
-       padding:10px;
-       border-radius: 3px;
-   }
+#cards .card:hover {
+  box-shadow: 0 20px 15px rgba(0, 0, 0, 0.24);
+  transform: translateY(-5px);
+}
 
-   .card_footer, .description {
-       font-family: sans-serif;
-       text-align: center;
-       padding: 10px 0;
-       margin-top: 10px;
-       color: rgb(46, 48, 48);
-       font-size: 15px;
-       font-weight: bold;
-   }
- a{
-     text-decoration: none;
- }
+.card .img {
+  text-align: center;
+  padding: 50px 0;
+  width: 250px;
+  margin: auto;
+}
+.top {
+  display: flex;
+  justify-content: space-between;
+}
+.top img {
+  height: 100%;
+  height: 30px;
+  margin: auto 0;
+}
+.img img {
+  width: 100%;
+}
+
+.time {
+  text-align: center;
+  font-weight: bold;
+  background-color: rgb(54, 54, 54);
+  font-family: sans-serif;
+  color: rgb(206, 206, 206);
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.card_footer,
+.description {
+  font-family: sans-serif;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 10px;
+  color: rgb(46, 48, 48);
+  font-size: 15px;
+  font-weight: bold;
+}
+a {
+  text-decoration: none;
+}
+.date {
+  position: relative;
+  width: 175px;
+  margin: 50px 20px;
+  height: 20px;
+}
+#min,
+#max {
+  width: 20px;
+  height: 20px;
+  background-color: rgb(248, 69, 37);
+  border-radius: 50%;
+  position: absolute;
+  right: -20px;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+#min {
+  left: -20px;
+}
+.date #range {
+  z-index: 1;
+  height: 2px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: 100%;
+  background-color: white;
+}
+
+#current_min_date {
+  position: absolute;
+  left: -20px;
+  top: 25px;
+}
+
+#current_max_date {
+  position: absolute;
+  right: -20px;
+  top: 25px;
+}
+.search {
+  background-color: white;
+  display: flex;
+  padding: 10px;
+  max-width: 500px;
+  border-radius: 2px;
+  transition: all .3s;
+}
+.search input {
+  border-radius: 2px;
+  border: 0;
+  transition: all 0.2s;
+  width: 100%;
+}
+.search input:focus {
+  outline: 0;
+}
+.search img {
+  width: 30px;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

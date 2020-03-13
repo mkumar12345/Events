@@ -1,5 +1,5 @@
 var url = "Join Events.xlsx";
-
+var json_sheet;
 /* set up async GET request */
 var req = new XMLHttpRequest();
 req.open("GET", url, true);
@@ -10,7 +10,7 @@ req.onload = function (e) {
   var workbook = XLSX.read(data, { type: "array" });
   /* DO SOMETHING WITH workbook HERE */
   var sheet_name_list = workbook.SheetNames;
-  var json_sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+  json_sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
   create_filters(json_sheet)
   for (let i = 0; i < json_sheet.length; i++) {
     var card = document.createElement("a");
@@ -52,7 +52,6 @@ req.onload = function (e) {
 
 
     s = json_sheet[i];
-
     // getting date in correct format
     var date = new Date(s.Date);
     var js_date = ExcelDateToJSDate(date);
@@ -62,7 +61,7 @@ req.onload = function (e) {
     company.src = s["Company Image"]
     price.src = s['Price Image'];
     illustration.src = s.Illustration;
-    time.innerHTML = final_date + s.Time;
+    time.innerHTML = final_date + " " + s.Time;
     title.innerHTML = s.Title;
     card.href = s.Link;
     card.target = "_blank"
@@ -71,6 +70,7 @@ req.onload = function (e) {
     card.dataset.productType = s['Product Type']
     card.dataset.type = s['Type']
     card.dataset.whoCanAttend = s['Who Can Attend']
+    card.dataset.serialDate = s['Date']
     document.getElementById("cards").appendChild(card); //apend to cards flexbox
 
   }
@@ -135,9 +135,9 @@ function create_filters(sheet) {
 
     fetched_values.forEach(function (value) {
       var enabled = document.createElement("div");
-      enabled.innerHTML="Enabled"
+      enabled.innerHTML = "Enabled"
       var disabled = document.createElement("div");
-      disabled.innerHTML="Disabled"
+      disabled.innerHTML = "Disabled"
       var new_value = document.createElement('div');     //create list of values from array for each option
       new_value.dataset.selected = false;
       new_value.id = value;
@@ -152,7 +152,7 @@ function create_filters(sheet) {
         var clicked = document.createElement("div");
         clicked.classList.add("selected");
         clicked.dataset.name = new_value.dataset.name;
-        clicked.innerHTML =value;
+        clicked.innerHTML = value;
         clicked.appendChild(enabled)
         clicked.dataset.type = fetched_option;
         selected.push(clicked);
@@ -207,8 +207,8 @@ function filter() {
   }
 
   var selected_types = [];
-  active_options.forEach(function(opt){           //count selected number of types
-    if(!selected_types.includes(opt.dataset.type)){
+  active_options.forEach(function (opt) {           //count selected number of types
+    if (!selected_types.includes(opt.dataset.type)) {
       selected_types.push(opt.dataset.type)
     }
   })
@@ -217,36 +217,135 @@ function filter() {
   var matches = []
   for (let i = 0; i < all_cards.length; i++) {
     all_cards[i].style.display = "inline-block"
+    all_cards[i].classList.remove("hidden-by-filter")
   }
   if (active_options.length > 0) {
     for (let i = 0; i < all_cards.length; i++) {
       all_cards[i].style.display = "none"
-      matches.push(0)
+      matches.push(0);
+      all_cards[i].classList.add("hidden-by-filter")
     }
     for (let i = 0; i < active_options.length; i++) {
       var current_type = _.camelCase(active_options[i].dataset.type);
-      var current_name = active_options[i].dataset.name.toLowerCase();
+      var current_name = active_options[i].dataset.name.toLowerCase();                //look man you will just need to dry run this and and try to understand what's going on, I can't explain. But the job of this part is to do the main filtering.
       if (current_type !== undefined && current_name !== undefined) {
         for (let j = 0; j < all_cards.length; j++) {
           if (all_cards[j].dataset[current_type].toLowerCase() === current_name) {
             matches[j]++;
-           if(matches[j]===selected_types.length){
-            all_cards[j].style.display = "inline-block"
-            console.log(all_cards[j])
-           }
-           else{
-            all_cards[j].style.display="none"
-           
+            if (matches[j] === selected_types.length) {
+              all_cards[j].style.display = "inline-block"
+              all_cards[j].classList.remove("hidden-by-filter")
+            }
+            else {
+              all_cards[j].style.display = "none"
+              all_cards[j].classList.add("hidden-by-filter")
+            }
           }
-          }
-         
+
         }
       }
     }
   }
- 
+
 }
 
 
 
-  
+var max_date = 43725;
+var min_date = 43550;
+var current_max = 175;
+var current_min = -21;
+
+
+dragElement(document.getElementById("max"));
+dragElement(document.getElementById("min"));
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  // otherwise, move the DIV from anywhere inside the DIV:
+  elmnt.onmousedown = dragMouseDown;
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    if (elmnt.id === "max") {
+      current_max = elmnt.offsetLeft - pos1;
+      if (current_max <= 175 && current_max > current_min + 20) {
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        max_date = 43550 + current_max;
+        var get_date = ExcelDateToJSDate(max_date);
+        var final_date = formatDate(get_date);
+        document.getElementById("current_max_date").innerHTML = final_date
+      }
+    }
+    if (elmnt.id === "min") {
+      current_min = elmnt.offsetLeft - pos1;
+      if (current_min < current_max - 20 && current_min > -21) {
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        min_date = 43550 + current_min;
+        var get_date = ExcelDateToJSDate(min_date);
+        var final_date = formatDate(get_date);
+        document.getElementById("current_min_date").innerHTML = final_date
+      }
+    }
+    // set the element's new position:
+
+    filter_date();
+  }
+  function closeDragElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+function filter_date() {
+  var cards = document.getElementsByClassName("card");
+  for (let i = 0; i < cards.length; i++) {
+    var date = parseInt(cards[i].dataset.serialDate);
+    if (date < min_date || date > max_date) {
+      cards[i].style.display = "none"
+    }
+
+    else if (!cards[i].classList.contains("hidden-by-filter")) {
+      cards[i].style.display = "block"
+    }
+  }
+}
+
+function search(text) {
+  var cards = document.getElementsByClassName("card");
+  var filter = text.toUpperCase();
+  for (let i = 0; i < json_sheet.length; i++) {
+    s = json_sheet[i];
+    var tags = s['Producer'] + s['Place'] + s['Region'] + s['Type'] + s['Product Type'] + s['Title'] + s['Who Can Attend'];
+    if (tags.toUpperCase().indexOf(filter) < 0) {
+      cards[i].style.display = "none"
+    }
+    else if (!cards[i].classList.contains("hidden-by-filter")) {
+      cards[i].style.display = "block"
+    }
+  }
+}
+
+document.getElementById("search").onfocus = function(){
+  document.getElementById("search_holder").style.maxWidth="100%"
+}
+document.getElementById("search").onblur = function(){
+  document.getElementById("search_holder").style.maxWidth="500px"
+}
