@@ -15,7 +15,6 @@ req.onload = function (e) {
   for (let i = 0; i < json_sheet.length; i++) {
     var card = document.createElement("a");
     card.classList.add("card");
-
     // top div
     var top = document.createElement("div");
     top.classList.add("top")
@@ -63,17 +62,27 @@ req.onload = function (e) {
     illustration.src = s.Illustration;
     time.innerHTML = final_date + " " + s.Time;
     title.innerHTML = s.Title;
-    card.href = s.Link;
-    card.target = "_blank"
+    // card.href = s.Link;
+    // card.target = "_blank"
+    card.dataset.thumbnail = s.Illustration;
+    card.dataset.link = s.Link;
+    card.dataset.time = time.innerHTML;
+    card.dataset.title = s['Title']
     card.dataset.producer = s['Producer']
+    card.dataset.description = s["Description"]
+    card.dataset.time = time.innerHTML;
     card.dataset.place = s['Place']
     card.dataset.productType = s['Product Type']
     card.dataset.type = s['Type']
     card.dataset.whoCanAttend = s['Who Can Attend']
     card.dataset.serialDate = s['Date']
     document.getElementById("cards").appendChild(card); //apend to cards flexbox
-
+    card.addEventListener("click", function () {
+      pop(this)
+    })
   }
+  paginate(document.getElementsByClassName("card"))
+
 }
 
 function ExcelDateToJSDate(serial) {
@@ -109,8 +118,13 @@ function formatDate(date) {
 }
 req.send();
 
+
+var global_keys = [];                //MAKING ALL OPTIONS BE AVAILABL GLOBALLY
+
+
 function create_filters(sheet) {
   var options = Object.keys(sheet[0]);
+  global_keys = options;
   options.forEach(function (fetched_option) { //option = filter label
     var drop_down = document.createElement("div");  //create drop down filter
     drop_down.classList.add("drop_down");
@@ -185,6 +199,7 @@ function create_filters(sheet) {
 
 
     if (fetched_option === "Producer" || fetched_option === "Place" || fetched_option === "Type" || fetched_option === "Product Type" || fetched_option === "Who Can Attend") {
+
       drop_down.appendChild(option);
       drop_down.appendChild(values);
       drop_down.appendChild(selected_holder)
@@ -198,6 +213,7 @@ function create_filters(sheet) {
 
 // filtering function
 function filter() {
+  var active_cards = []
   var all_options = Array.from(document.getElementsByClassName("value"))
   var active_options = [];
   for (let i = 0; i < all_options.length; i++) {
@@ -234,7 +250,8 @@ function filter() {
             matches[j]++;
             if (matches[j] === selected_types.length) {
               all_cards[j].style.display = "inline-block"
-              all_cards[j].classList.remove("hidden-by-filter")
+              all_cards[j].classList.remove("hidden-by-filter");
+              active_cards.push(all_cards[j])
             }
             else {
               all_cards[j].style.display = "none"
@@ -246,7 +263,12 @@ function filter() {
       }
     }
   }
-
+  if (active_cards.length > 0) {
+    paginate(active_cards)
+  }
+  else {
+    paginate(document.getElementsByClassName("card"))
+  }
 }
 
 
@@ -264,26 +286,28 @@ function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   // otherwise, move the DIV from anywhere inside the DIV:
   elmnt.onmousedown = dragMouseDown;
-
+  elmnt.ontouchstart = dragMouseDown;
   function dragMouseDown(e) {
     e = e || window.event;
     e.preventDefault();
     // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
+    pos3 = e.clientX || e.touches[0].clientX
+    pos4 = e.clientY || e.touches[0].clientY
     document.onmouseup = closeDragElement;
+    document.ontouchend = closeDragElement;
     // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
+    document.onmousemove = elementDrag
+    document.ontouchmove = elementDrag
   }
 
   function elementDrag(e) {
     e = e || window.event;
     e.preventDefault();
     // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
+    pos1 = pos3 - e.clientX ||  pos3 - e.touches[0].clientX
+    pos2 = pos3 - e.clientY ||  pos4 - e.touches[0].clientY
+    pos3 = e.clientX || e.touches[0].clientX
+    pos4 = e.clientY || e.touches[0].clientY
     if (elmnt.id === "max") {
       current_max = elmnt.offsetLeft - pos1;
       if (current_max <= 175 && current_max > current_min + 20) {
@@ -312,9 +336,12 @@ function dragElement(elmnt) {
     // stop moving when mouse button is released:
     document.onmouseup = null;
     document.onmousemove = null;
+    document.ontouchend = null;
+    document.ontouchmove = null;
   }
 }
 function filter_date() {
+  var active_cards = [];
   var cards = document.getElementsByClassName("card");
   for (let i = 0; i < cards.length; i++) {
     var date = parseInt(cards[i].dataset.serialDate);
@@ -323,12 +350,18 @@ function filter_date() {
     }
 
     else if (!cards[i].classList.contains("hidden-by-filter")) {
-      cards[i].style.display = "block"
+      cards[i].style.display = "block";
+      active_cards.push(cards[i])
     }
   }
+  if (active_cards.length > 0) {
+    paginate(active_cards)
+  }
+
 }
 
 function search(text) {
+  var active_cards = [];
   var cards = document.getElementsByClassName("card");
   var filter = text.toUpperCase();
   for (let i = 0; i < json_sheet.length; i++) {
@@ -339,13 +372,109 @@ function search(text) {
     }
     else if (!cards[i].classList.contains("hidden-by-filter")) {
       cards[i].style.display = "block"
+      active_cards.push(cards[i]);
+      console.log(active_cards)
+    }
+  }
+  if (active_cards.length > 0) {
+    paginate(active_cards)
+  }
+}
+
+document.getElementById("search").onfocus = function () {
+  document.getElementById("search_holder").style.maxWidth = "100%"
+}
+document.getElementById("search").onblur = function () {
+  document.getElementById("search_holder").style.maxWidth = "500px"
+}
+
+var popup = document.getElementById("popup_holder");
+var popup_inner = document.getElementsByClassName("popup")[[0]]
+document.getElementById("close").onclick = function () {
+  popup.style.visibility = "hidden";
+  popup_inner.style.transform = "scale(0)"
+  popup_inner.style.opacity = "0"
+}
+function pop(element) {
+  popup.style.visibility = "visible"
+  popup_inner.style.transform = "scale(1)"
+  popup_inner.style.opacity = "1"
+  document.getElementById("popup_thumbnail").src = element.dataset['thumbnail']
+  document.getElementById("popup_time").innerHTML = element.dataset['time']
+  document.getElementById("popup_title").innerHTML = element.dataset['title']
+  document.getElementById("popup_description").innerHTML = element.dataset['description']
+  document.getElementById("property_producer").innerHTML = element.dataset['producer']
+  document.getElementById("property_place").innerHTML = element.dataset['place']
+  document.getElementById("property_type").innerHTML = element.dataset['type']
+  document.getElementById("property_product_type").innerHTML = element.dataset.productType
+  document.getElementById("property_who_can_attend").innerHTML = element.dataset.whoCanAttend
+  document.getElementById("register_link").href = element.dataset.link;
+  document.getElementById("register_link").target = "_blank"
+}
+
+////////////////PAGINATION///////////////////////
+
+
+
+//CONSTANTS
+
+const MAX_PER_PAGE = 8;
+// Variables
+
+var current_page = 1;
+// pagination function
+
+function paginate(cards) {
+  document.getElementsByClassName("pagination_buttons")[0].innerHTML = ""
+  current_page = 1;
+  var page_assigner = 1;
+  var page1 = document.createElement("div");
+  page1.classList.add("page_button");
+  page1.classList.add("active_page");
+  page1.innerHTML = page_assigner
+  document.getElementsByClassName("pagination_buttons")[0].appendChild(page1);
+  page1.onclick = function () {
+    current_page = parseInt(this.innerHTML)
+    updatePage(cards, current_page);
+  }
+  for (let i = 0; i < cards.length; i++) {
+    if (i > 1 && i % MAX_PER_PAGE === 0) {
+      page_assigner++;
+      var page = document.createElement("div");
+      page.classList.add("page_button");
+      page.innerHTML = page_assigner
+      document.getElementsByClassName("pagination_buttons")[0].appendChild(page)
+      page.onclick = function () {
+        current_page = parseInt(this.innerHTML);
+        updatePage(cards, current_page);
+      }
+    }
+    cards[i].dataset.page = page_assigner
+  }
+  var buttons = document.getElementsByClassName("page_button");
+  updatePage(cards, current_page);
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", function () {
+      for (let j = 0; j < buttons.length; j++) {
+        buttons[j].classList.remove("active_page");
+      }
+      this.classList.add("active_page")
+      console.log('ok')
+    })
+  }
+}
+
+
+
+function updatePage(cards, p) {
+  for (let i = 0; i < cards.length; i++) {
+    if (parseInt(cards[i].dataset.page) === p && !cards[i].classList.contains("hidden-by-filter")) {
+      cards[i].style.display = "inline-block"
+    }
+    else {
+      cards[i].style.display = "none"
     }
   }
 }
 
-document.getElementById("search").onfocus = function(){
-  document.getElementById("search_holder").style.maxWidth="100%"
-}
-document.getElementById("search").onblur = function(){
-  document.getElementById("search_holder").style.maxWidth="500px"
-}
+

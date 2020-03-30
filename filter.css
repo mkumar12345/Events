@@ -1,85 +1,83 @@
 .filters {
   padding: 15px;
-  background-color: rgb(43, 42, 42);
-  color: white;
+  background-color: rgb(245, 245, 245);
+  text-align: center;
 }
+
 #drop_downs {
-    text-align: center;
+  /* text-align: center; */
 }
 .drop_down {
-    text-align: left;
-  border: 1px solid rgba(252, 251, 251, 0.199);
   display: inline-block;
+  text-align: left;
   vertical-align: top;
-  margin: 5px;
   cursor: pointer;
-  background-color: rgb(70, 68, 68);
+  margin: 5px;
   width: 180px;
   transition: all 0.2s;
   position: relative;
 }
-.drop_down .option{
+.drop_down .option {
+  background-color: rgb(255, 253, 253);
   padding: 10px;
+  border:1px solid rgb(211, 211, 211);
+}
 
-}
-.drop_down:hover {
-  background-color: rgb(49, 49, 49);
-}
 .drop_down:hover .values {
   display: block;
   max-height: 600px;
   visibility: visible;
-
 }
 .drop_down .values {
-z-index: 1;
-background-color: rgb(255, 255, 255);
+  z-index: 3;
+  background-color: rgb(241, 241, 241);
   max-height: 0;
   transition: all 0.3s;
   position: absolute;
   overflow: hidden;
   right: 0;
   left: 0;
-  top:100%;
-  color:Black;
-  border:1px solid rgba(0, 0, 0, 0.24);
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
+  top: 100%;
+  color: Black;
+
+ 
 }
 
 .values .value {
+  border:1px solid rgb(211, 211, 211);
+  border-top: 0;
   padding: 10px;
   min-height: 20px;
-  transition: all .2s;
-  border-bottom:1px solid rgba(0, 0, 0, 0.062);
-  display:flex;
+  transition: all 0.2s;
+  display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
-.values .value div{
-  font-size:13px;
-  color:rgb(133, 132, 132);
+.values .value div {
+  font-size: 13px;
+  color: rgb(133, 132, 132);
   pointer-events: none;
 }
-.values .value:hover{
-    background-color: rgba(128, 128, 128, 0.185);
+.values .value:hover {
+  background-color: rgba(245, 245, 245, 0.836);
 }
 
-.drop_down .selected{
-    background-color: rgb(70, 68, 68);
-  border-bottom:1px solid rgba(255, 251, 251, 0.26);
+.drop_down .selected {
+  border:1px solid rgb(211, 211, 211);
+  border-top: 0;
+  background-color: rgb(255, 255, 255);
   padding: 10px;
-  transition:all .2s;
-  display:flex;
+  transition: all 0.2s;
+  display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
-.drop_down .selected div{
-  font-size:13px;
-  color:rgb(25, 209, 25);
+.drop_down .selected div {
+  font-size: 13px;
+  color: rgb(25, 209, 25);
   pointer-events: none;
 }
-.drop_down .selected:hover{
-  background-color: rgb(49, 49, 49);
-
+.drop_down .selected:hover {
+  background-color: rgb(255, 255, 255);
 }
+
