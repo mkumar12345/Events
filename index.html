@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-	<link rel="stylesheet" href="filter.css">
+    <link rel="stylesheet" href="filter.css">
+    <link rel="stylesheet" href="popup.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Join Events | ANSYS Community</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -191,17 +192,46 @@
             </div>
             <div class="date">
                 <div id="current_min_date">03/06/2019</div>
-              <div id="min"></div>
-              <div id="range"></div>
-              <div id="max"></div>
-              <div id="current_max_date">09/17/2019</div>
+                <div id="min"></div>
+                <div id="range"></div>
+                <div id="max"></div>
+                <div id="current_max_date">09/17/2019</div>
             </div>
             <div class="search" id="search_holder">
                 <img src="imgs/search.png" alt="">
                 <input id="search" type="text" placeholder="Search by keyword" onkeyup="search(this.value)">
             </div>
         </div>
+        <div id="pagination_controls">
+            <div class="pagination_buttons">
+
+            </div>
+        </div>
         <div id="cards">
+         <div id="popup_holder">
+            <div class="popup">
+             <div id="close">Close</div>
+             <div class="top">
+                    <img id="popup_thumbnail" src="https://static.wixstatic.com/media/33ace4_f7de4658844541c5a69651b7a25e3c2b~mv2.png" alt="">
+                </div>
+                <div id="popup_time">03/26/2019 11:00 AM (EDT)</div>
+                <div id="popup_title">Understanding the SOTIF Domain and How Safety Analysis Tools Can Perform SOTIF-Related Analysis of E/E Systems</div>
+                <div id="popup_properties">
+                    <ul>
+                        <li><div class="property_label">producer</div> <span id="property_producer"></span></li>
+                        <li><div class="property_label">place</div><span id="property_place"></span></li>
+                        <li><div class="property_label">type</div><span id="property_type"></span></li>
+                        <li><div class="property_label">product type</div><span id="property_product_type"></span></li>
+                        <li><div class="property_label">who can attend</div><span id="property_who_can_attend"></span></li>
+                       <a href="" id="register_link"> <li class="register_li"><div class="property_label register">register link</div><span id="register">Register Now</span></li></a>
+                    </ul>
+                </div>
+                <div id="popup_description" class="paragraph">
+
+                </div>
+                <a href="" id="popup_button"></a>
+            </div>
+         </div>
         </div>
     </main>
 
